@@ -30,91 +30,91 @@ public class Handler implements Listener {
 
     private static final Map<ItemStack, Integer> threadsId = new HashMap<>();
     private static final Map<String, Class> allEntity = new HashMap<String, Class>(){{
-        put("ArmorStand", ArmorStand.class);
-        put("Bat", Bat.class);
-        put("Bee", Bee.class);
-        put("Blaze", Blaze.class);
-        put("Boat", Boat.class);
-        put("Cat", Cat.class);
-        put("CaveSpider", CaveSpider.class);
-        put("Chicken", Chicken.class);
-        put("Cod", Cod.class);
-        put("Cow", Cow.class);
-        put("Creeper", Creeper.class);
-        put("Dolphin", Dolphin.class);
-        put("Donkey", Donkey.class);
-        put("Drowned", Drowned.class);
-        put("ElderGuardian", ElderGuardian.class);
-        put("EnderDragon", EnderDragon.class);
-        put("Enderman", Enderman.class);
-        put("Endermite", Endermite.class);
-        put("Evoker", Endermite.class);
-        put("EvokerFangs", EvokerFangs.class);
-        put("ExperienceOrb", ExperienceOrb.class);
-        put("Fireball", Fireball.class);
-        put("Fox", Fox.class);
-        put("Ghast", Ghast.class);
-        put("Giant", Giant.class);
-        put("Hoglin", Hoglin.class);
-        put("Horse", Horse.class);
-        put("Husk", Husk.class);
-        put("Illager", Illager.class);
-        put("Illusioner", Illusioner.class);
-        put("IronGolem", IronGolem.class);
-        put("ItemFrame", ItemFrame.class);
-        put("LargeFireball", LargeFireball.class);
-        put("Llama", Llama.class);
-        put("LlamaSpit", LlamaSpit.class);
-        put("MagmaCube", MagmaCube.class);
-        put("Minecart", Minecart.class);
-        put("Mule", Mule.class);
-        put("MushroomCow", MushroomCow.class);
-        put("Ocelot", Ocelot.class);
-        put("Painting", Painting.class);
-        put("Panda", Panda.class);
-        put("Parrot", Parrot.class);
-        put("Phantom", Phantom.class);
-        put("Pig", Pig.class);
-        put("Piglin", Piglin.class);
-        put("PiglinBrute", PiglinBrute.class);
-        put("PigZombie", PigZombie.class);
-        put("Pillager", Pillager.class);
-        put("PolarBear", PolarBear.class);
-        put("PufferFish", PufferFish.class);
-        put("Rabbit", Rabbit.class);
-        put("Ravager", Ravager.class);
-        put("Salmon", Salmon.class);
-        put("Sheep", Sheep.class);
-        put("Shulker", Shulker.class);
-        put("ShulkerBullet", ShulkerBullet.class);
-        put("Silverfish", Silverfish.class);
-        put("SizedFireball", SizedFireball.class);
-        put("Skeleton", Skeleton.class);
-        put("SkeletonHorse", SkeletonHorse.class);
-        put("Slime", Slime.class);
-        put("SmallFireball", SmallFireball.class);
-        put("Snowball", Snowball.class);
-        put("Snowman", Snowman.class);
-        put("Spider", Spider.class);
-        put("Squid", Squid.class);
-        put("Stray", Stray.class);
-        put("Strider", Strider.class);
-        put("TNTPrimed", TNTPrimed.class);
-        put("TraderLlama", TraderLlama.class);
-        put("TropicalFish", TropicalFish.class);
-        put("Turtle", Turtle.class);
-        put("Vex", Vex.class);
-        put("Villager", Villager.class);
-        put("Vindicator", Vindicator.class);
-        put("WanderingTrader", WanderingTrader.class);
-        put("Witch", Witch.class);
-        put("WitherSkeleton", WitherSkeleton.class);
-        put("WitherSkull", WitherSkull.class);
-        put("Wolf", Wolf.class);
-        put("Zoglin", Zoglin.class);
-        put("Zombie", Zombie.class);
-        put("ZombieHorse", ZombieHorse.class);
-        put("ZombieVillager", ZombieVillager.class);
+        put("armorstand", ArmorStand.class);
+        put("bat", Bat.class);
+        put("bee", Bee.class);
+        put("blaze", Blaze.class);
+        put("boat", Boat.class);
+        put("cat", Cat.class);
+        put("cavespider", CaveSpider.class);
+        put("chicken", Chicken.class);
+        put("cod", Cod.class);
+        put("cow", Cow.class);
+        put("creeper", Creeper.class);
+        put("dolphin", Dolphin.class);
+        put("donkey", Donkey.class);
+        put("drowned", Drowned.class);
+        put("elderguardian", ElderGuardian.class);
+        put("enderdragon", EnderDragon.class);
+        put("enderman", Enderman.class);
+        put("endermite", Endermite.class);
+        put("evoker", Evoker.class);
+        put("evokerfangs", EvokerFangs.class);
+        put("experienceorb", ExperienceOrb.class);
+        put("fireball", Fireball.class);
+        put("fox", Fox.class);
+        put("ghast", Ghast.class);
+        put("giant", Giant.class);
+        put("hoglin", Hoglin.class);
+        put("horse", Horse.class);
+        put("husk", Husk.class);
+        put("illager", Illager.class);
+        put("illusioner", Illusioner.class);
+        put("irongolem", IronGolem.class);
+        put("itemgrame", ItemFrame.class);
+        put("largefireball", LargeFireball.class);
+        put("llama", Llama.class);
+        put("llamaSpit", LlamaSpit.class);
+        put("magmaCube", MagmaCube.class);
+        put("minecart", Minecart.class);
+        put("mule", Mule.class);
+        put("mushroomCow", MushroomCow.class);
+        put("ocelot", Ocelot.class);
+        put("painting", Painting.class);
+        put("panda", Panda.class);
+        put("parrot", Parrot.class);
+        put("phantom", Phantom.class);
+        put("pig", Pig.class);
+        put("piglin", Piglin.class);
+        put("piglinbrute", PiglinBrute.class);
+        put("pigzombie", PigZombie.class);
+        put("pillager", Pillager.class);
+        put("polarbear", PolarBear.class);
+        put("pufferfish", PufferFish.class);
+        put("rabbit", Rabbit.class);
+        put("ravager", Ravager.class);
+        put("salmon", Salmon.class);
+        put("sheep", Sheep.class);
+        put("shulker", Shulker.class);
+        put("shulkerbullet", ShulkerBullet.class);
+        put("silverfish", Silverfish.class);
+        put("sizedfireball", SizedFireball.class);
+        put("skeleton", Skeleton.class);
+        put("skeletonHorse", SkeletonHorse.class);
+        put("slime", Slime.class);
+        put("smallfireball", SmallFireball.class);
+        put("snowball", Snowball.class);
+        put("snowman", Snowman.class);
+        put("spider", Spider.class);
+        put("squid", Squid.class);
+        put("stray", Stray.class);
+        put("strider", Strider.class);
+        put("tntprimed", TNTPrimed.class);
+        put("traderllama", TraderLlama.class);
+        put("tropicalfish", TropicalFish.class);
+        put("turtle", Turtle.class);
+        put("vex", Vex.class);
+        put("villager", Villager.class);
+        put("vindicator", Vindicator.class);
+        put("wanderingTrader", WanderingTrader.class);
+        put("witch", Witch.class);
+        put("witherSkeleton", WitherSkeleton.class);
+        put("witherSkull", WitherSkull.class);
+        put("wolf", Wolf.class);
+        put("zoglin", Zoglin.class);
+        put("zombie", Zombie.class);
+        put("zombieHorse", ZombieHorse.class);
+        put("zombieVillager", ZombieVillager.class);
     }};
 //    Bat, Bee, Blaze, Cat(Types), CaveSpider, Chicken, Cod, Cow, Creeper, Dolphin, Donkey, Drowned
     private static Main main;
@@ -230,22 +230,22 @@ public class Handler implements Listener {
                         interactEvent.setCancelled(true);
                         Location location = player.getTargetBlock(null, 6).getLocation();
                         location.setY(location.getBlockY() + 1);
-                        LivingEntity entity = (LivingEntity) interactEvent.getPlayer().getWorld().spawn(location, allEntity.get(dataMap.get("Type").data));
+                        LivingEntity entity = (LivingEntity) interactEvent.getPlayer().getWorld().spawn(location, allEntity.get(dataMap.get("Type").data.toLowerCase(Locale.ROOT)));
                         if(dataMap.containsKey("MobType"))
-                            switch (dataMap.get("Type").data){
-                                case "Cat":
+                            switch (dataMap.get("Type").data.toLowerCase(Locale.ROOT)){
+                                case "cat":
                                     Cat cat = (Cat) entity;
                                     cat.setCatType(Cat.Type.valueOf(dataMap.get("MobType").data.toUpperCase(Locale.ROOT)));
                                     break;
-                                case "EnderDragon":
+                                case "enderdragon":
                                     EnderDragon enderDragon = (EnderDragon) entity;
                                     enderDragon.setPhase(EnderDragon.Phase.valueOf(dataMap.get("MobType").data.toUpperCase(Locale.ROOT)));
                                     break;
-                                case "Fox":
+                                case "fox":
                                     Fox fox = (Fox) entity;
                                     fox.setFoxType(Fox.Type.valueOf(dataMap.get("MobType").data.toUpperCase(Locale.ROOT)));
                                     break;
-                                case "Horse":
+                                case "horse":
                                     Horse horse = (Horse) entity;
                                     String[] data = dataMap.get("MobType").data.toUpperCase(Locale.ROOT).split("\\.");
                                     if(data.length >= 1)
@@ -254,31 +254,31 @@ public class Handler implements Listener {
                                     if(data.length >= 2)
                                         horse.setStyle(Horse.Style.valueOf(data[1]));
                                     break;
-                                case "Llama":
+                                case "llama":
                                     Llama llama = (Llama) entity;
                                     llama.setColor(Llama.Color.valueOf(dataMap.get("MobType").data.toUpperCase(Locale.ROOT)));
                                     break;
-                                case "MushroomCow":
+                                case "mushroomcow":
                                     MushroomCow mushroomCow = (MushroomCow) entity;
                                     mushroomCow.setVariant(MushroomCow.Variant.valueOf(dataMap.get("MobType").data.toUpperCase(Locale.ROOT)));
                                     break;
-                                case "Panda":
+                                case "panda":
                                     Panda panda = (Panda) entity;
                                     panda.setMainGene(Panda.Gene.valueOf(dataMap.get("MobType").data.toUpperCase(Locale.ROOT)));
                                     break;
-                                case "Parrot":
+                                case "parrot":
                                     Parrot parrot = (Parrot) entity;
                                     parrot.setVariant(Parrot.Variant.valueOf(dataMap.get("MobType").data.toUpperCase(Locale.ROOT)));
                                     break;
-                                case "Rabbit":
+                                case "rabbit":
                                     Rabbit rabbit = (Rabbit) entity;
                                     rabbit.setRabbitType(Rabbit.Type.valueOf(dataMap.get("MobType").data.toUpperCase(Locale.ROOT)));
                                     break;
-                                case "TropicalFish":
+                                case "tropicalfish":
                                     TropicalFish tropicalFish = (TropicalFish) entity;
                                     tropicalFish.setPattern(TropicalFish.Pattern.valueOf(dataMap.get("MobType").data.toUpperCase(Locale.ROOT)));
                                     break;
-                                case "Villager":
+                                case "villager":
                                     Villager villager = (Villager) entity;
                                     String[] dataVillager = dataMap.get("MobType").data.toUpperCase(Locale.ROOT).split("\\.");
                                     if(dataVillager.length >= 1)
@@ -970,7 +970,7 @@ public class Handler implements Listener {
 
     public void setEffects(LivingEntity entity, ArrayList<Map<String, ConstructorNBTData>> dataEffects){
         for (Map<String, ConstructorNBTData> effect: dataEffects) {
-            PotionEffectType potionEffectType = PotionEffectType.getByName(effect.get("Id").data);
+            PotionEffectType potionEffectType = PotionEffectType.getByName(effect.get("Id").data.toUpperCase(Locale.ROOT));
             if(potionEffectType == null)
                 potionEffectType = PotionEffectType.SPEED;
             if(effect.get("Particles").dataInt == -1)
@@ -984,7 +984,7 @@ public class Handler implements Listener {
 
     public void clearEffects(Player player, ArrayList<Map<String, ConstructorNBTData>> dataEffects){
         for (Map<String, ConstructorNBTData> effect: dataEffects) {
-            PotionEffectType potionEffectType = PotionEffectType.getByName(effect.get("Id").data);
+            PotionEffectType potionEffectType = PotionEffectType.getByName(effect.get("Id").data.toUpperCase(Locale.ROOT));
             if(potionEffectType == null)
                 potionEffectType = PotionEffectType.SPEED;
             player.removePotionEffect(potionEffectType);

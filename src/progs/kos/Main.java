@@ -42,7 +42,7 @@ public class Main extends JavaPlugin {
     public static final String ID_THREAD  = "CPIdThread"; //Айди потока. НЕ ДОБАВЛЯТЬ В ПРЕДМЕТ!!! ГЕНЕРИРУЕТСЯ САМО!!!!!!
     public static final Pattern CheckCustomTag = Pattern.compile("^("+ SNOWBALL+ "|"+ BREAK + "|"+ AUTO_MELTING + "|"+ PARTICLES_IN_MAIN_HAND + "|"+ PARTICLES_IN_SECOND_HAND + "|"+ PARTICLES_IN_ARMOR + "|"+ PARTICLES_IN_INVENTORY + "|"+ EXPERIENCES_BOOST + "|"+ TELEKINESIS + "|"+ ID_THREAD + "|" + ANIMATION_COLOR + "|"+ ARROW + "|" + EGGS + "|" +TELEPORT +"|"+ EFFECT_IN_MAIN_HAND +"|"+ EFFECT_IN_SECOND_HAND +"|"+ EFFECT_IN_ARMOR +"|"+ EFFECT_IN_INVENTORY +"|"+ PARTICLES +"|"+ LIGHTNING +"|"+ FIREWORK +"|"+ SUPER_MOB +"|"+ COOLDOWN +")$");
     /*tags
-    CPTeleport{distance, delay}
+    CPTeleport{distance, CD}
     CPInMainHand[{id:,lvl:}, {}]
     CPInSecondHand[{id:,lvl:}, {}]
     {CPInSecondHand:{Particles:1, Data:[{Id:LEVITATION,Lvl:2}]}}
