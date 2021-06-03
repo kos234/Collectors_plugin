@@ -45,21 +45,25 @@ public class Main extends JavaPlugin {
     CPTeleport{distance, delay}
     CPInMainHand[{id:,lvl:}, {}]
     CPInSecondHand[{id:,lvl:}, {}]
+    {CPInSecondHand:{Particles:1, Data:[{Id:LEVITATION,Lvl:2}]}}
     {CPInArmor:{Effects:{Particles:-1 0 1, Data:[{Id:INCREASE_DAMAGE,Lvl:2}, {}]}}
     {CPParticlesInMainHand{CD:20, Sleep:10, Particles:{[Type:Name,OffsetX:0.23,OffsetY:4.3,OffsetZ:34]}}}
-    {CPInInventory:{Particles:-1, Data:[{Id:JUMP,Lvl:2}]}}
+    {CPInInventory:{Particles:-1, Data:[{Id:LEVITATION,Lvl:1}]}}
+    {CPEffectInArmor:{Particles:-1, Data:[{Id:LEVITATION,Lvl:1}]}}
+    {CPEffectInInventory:{Particles:-1, Data:[{Id:LEVITATION,Lvl:1}]}}
     CPEffectInInventory[{id:,lvl:}, {}]
     CPParticles[] - wtf?
     CPLightning: delay
     CPFirework: delay
     CPInvertMove:1
     CPInvertMouse: 1
-    {CPFirework:{Meta:Random},CD:0}
-    {CPFirework:{Meta:{MainColor:[1,2],FadeColor:[3,4],Type:2,Power:1,Effect:1}},CD:2}
+    {CPFirework:{Meta:Random,CD:0}
+    {CPFirework:{Meta:{MainColor:[1,2],FadeColor:[3,4],Type:2,Power:1,Effect:1},CD:2}}
     COOLDOWN[{Event, time}]
     {CPAnimationColor:{Colors:[ffffff,000000],Speed:20}}
     {CPAnimationColor:{Colors:[ffffff,000000],Speed:20,Stage:3}}
-    {CPSuperMob:{Type:Name,MobType:d,Effects:{Particles:-1 0 1, Data:[{Id:INCREASE_DAMAGE,Lvl:2}, {}]}}}
+    {CPAnimationColor:{Colors:[ff0000,ffa500,ffff00,008000,42aaff,0000ff,8b00ff],Speed:20,Stage:3}}
+    {CPSuperMob:{Type:Snowman,Effects:{Particles:1, Data:[{Id:FIRE_RESISTANCE,Lvl:2}]}}}
     {CPBreak:{Size:3x3x3,BreakItem:1},CPExperiencesBoost:20,CPTelekinesis:1}
 
     {CPSuperMob:{Type:IronGolem,MobType:d,Effects:{Particles:1, Data:[{Id:INCREASE_DAMAGE,Lvl:2}]}}}

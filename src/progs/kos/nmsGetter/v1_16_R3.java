@@ -124,18 +124,19 @@ public class v1_16_R3 implements NMSManager {
                         break;
 
                     case Main.FIREWORK:
+                        NBTTagCompound nbtTagFirework = tag.getCompound(key), fireworkMeta;
+                        Map<String, ConstructorNBTData> firework = new HashMap<>();
+                        firework.put("CD", new ConstructorNBTData(nbtTagFirework.getInt("CD")));
                         if(tag.getCompound(key).get("Meta").asString().equals("Random"))
-                            nbtData.put(key, new ConstructorNBTData("Random"));
-                        else{
-                            NBTTagCompound nbtTagCompound = tag.getCompound(key), fireworkMeta;
-                            Map<String, ConstructorNBTData> firework = new HashMap<>();
-                            firework.put("CD", new ConstructorNBTData(nbtTagCompound.getInt("CD")));
-                            fireworkMeta = nbtTagCompound.getCompound("Meta");
+                            firework.put("Meta", new ConstructorNBTData(nbtTagFirework.getString("Meta")));
+                        else {
+                            fireworkMeta = nbtTagFirework.getCompound("Meta");
                             firework.put("Meta", new ConstructorNBTData(stringToIntArray(fireworkMeta.get("MainColor").asString()),
-                                    stringToIntArray(fireworkMeta.get("FadeColor").asString()), fireworkMeta.getInt("Type"),
-                                    fireworkMeta.getInt("Power"), fireworkMeta.getInt("Effect")));
-                            nbtData.put(key, new ConstructorNBTData(firework));
+                                stringToIntArray(fireworkMeta.get("FadeColor").asString()), fireworkMeta.getInt("Type"),
+                                fireworkMeta.getInt("Power"), fireworkMeta.getInt("Effect")));
                         }
+                        nbtData.put(key, new ConstructorNBTData(firework));
+
                         break;
 
                     case Main.ANIMATION_COLOR:
@@ -273,15 +274,6 @@ public class v1_16_R3 implements NMSManager {
         return CraftItemStack.asBukkitCopy(item);
     }
 
-//    @Override
-//    public ItemStack setIdThread(ItemStack itemStack, int id) {
-//        net.minecraft.server.v1_16_R3.ItemStack item = CraftItemStack.asNMSCopy(itemStack);
-//        NBTTagCompound tag = item.getTag();
-//        tag.setInt(Main.ID_THREAD, id);
-//        item.setTag(tag);
-//        return CraftItemStack.asBukkitCopy(item);
-//    }
-
     @Override
     public void setNBTEntity(ItemStack eggs, org.bukkit.entity.Entity entity) {
         net.minecraft.server.v1_16_R3.ItemStack item = CraftItemStack.asNMSCopy(eggs);
@@ -296,30 +288,30 @@ public class v1_16_R3 implements NMSManager {
 
     @Override
     public int createParticles(Player player, Map<String, ConstructorNBTData> mapParticles, Main main) {
-//        Location location = player.getLocation();
-//        PacketPlayOutWorldParticles packetPlayOutWorldParticles = new PacketPlayOutWorldParticles(Particles.NOTE, true, location.getX(), location.getY(), location.getZ(), 0, 0, 0, 0, 0);
-//        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packetPlayOutWorldParticles);
+        Location location = player.getLocation();
+        PacketPlayOutWorldParticles packetPlayOutWorldParticles = new PacketPlayOutWorldParticles(Particles.NOTE, true, location.getX(), location.getY(), location.getZ(), 0, 0, 0, 0, 0);
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packetPlayOutWorldParticles);
 
-//        return Bukkit.getScheduler().scheduleSyncRepeatingTask(main, new Runnable() {
-//            boolean isRandom = false;
-//            @Override
-//            public void run() {
-//                float red = 255;
-//                float green = 255;
-//                float blue = 255;
-//                Location location = player.getLocation();
-//                ArrayList<Map<String, ConstructorNBTData>> mapArrayList = (ArrayList<Map<String, ConstructorNBTData>>) mapParticles.get("Particles").arrayData;
-//                for (Map<String, ConstructorNBTData> dataParticles: mapArrayList) {
-//                    isRandom = dataParticles.get("Type").data.equals("Random");
-//                    if(allParticlesData.containsKey(dataParticles.get("Type").data))
-//                        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutWorldParticles(allParticlesData.get(dataParticles.get("Type").data), false, location.getX() + dataParticles.get("OffsetX").floatValue, location.getY() + dataParticles.get("OffsetY").floatValue, location.getZ() + dataParticles.get("OffsetZ").floatValue,red, green, blue, 0, 0));
-//                    else {
-//                        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutWorldParticles(allParticlesData.get(allKeys.get(Handler.random(allKeys.size() - 1))), true, location.getX() + dataParticles.get("OffsetX").floatValue, location.getY() + dataParticles.get("OffsetY").floatValue, location.getZ() + dataParticles.get("OffsetZ").floatValue, 0, 0, 0, 0, 0));
-//                    }
-//                }
-//            }
-//        }, 0, mapParticles.get("CD").dataInt);
-        return 0;
+        return Bukkit.getScheduler().scheduleSyncRepeatingTask(main, new Runnable() {
+            boolean isRandom = false;
+            @Override
+            public void run() {
+                float red = 0;
+                float green = 0;
+                float blue = 0;
+                Location location = player.getLocation();
+                ArrayList<Map<String, ConstructorNBTData>> mapArrayList = (ArrayList<Map<String, ConstructorNBTData>>) mapParticles.get("Particles").arrayData;
+                for (Map<String, ConstructorNBTData> dataParticles: mapArrayList) {
+                    isRandom = dataParticles.get("Type").data.equals("Random");
+                    if(allParticlesData.containsKey(dataParticles.get("Type").data))
+                        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutWorldParticles(allParticlesData.get(dataParticles.get("Type").data), true, location.getX() + dataParticles.get("OffsetX").floatValue, location.getY() + dataParticles.get("OffsetY").floatValue, location.getZ() + dataParticles.get("OffsetZ").floatValue,red, green, blue, 0, 100));
+                    else {
+                        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutWorldParticles(allParticlesData.get(allKeys.get(Handler.random(allKeys.size() - 1))), true, location.getX() + dataParticles.get("OffsetX").floatValue, location.getY() + dataParticles.get("OffsetY").floatValue, location.getZ() + dataParticles.get("OffsetZ").floatValue, 0, 0, 0, 0, 0));
+                    }
+                }
+            }
+        }, 0, mapParticles.get("CD").dataInt);
+//        return 0;
     }
 
 

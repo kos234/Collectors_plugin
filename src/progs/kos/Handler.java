@@ -1,16 +1,10 @@
 package progs.kos;
 
-import net.minecraft.server.v1_13_R1.ItemFireworks;
-import net.minecraft.server.v1_13_R1.Village;
-import net.minecraft.server.v1_16_R3.BlockPosition;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.type.Snow;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.ArrowBodyCountChangeEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -18,26 +12,17 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionEffectTypeWrapper;
-import org.bukkit.util.RayTraceResult;
-import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 import progs.kos.nmsGetter.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -137,44 +122,44 @@ public class Handler implements Listener {
     private static final FireworkEffect.Type[] TYPES = new FireworkEffect.Type[]{FireworkEffect.Type.BALL, FireworkEffect.Type.BALL_LARGE, FireworkEffect.Type.STAR ,FireworkEffect.Type.BURST, FireworkEffect.Type.CREEPER};
 
     public Handler(Main main) {
-        this.main = main;
+        Handler.main = main;
     }
 
     @EventHandler
     public void onClick(PlayerInteractEvent interactEvent){
         Player player = interactEvent.getPlayer();
 
-        if(player.getItemInHand().getType().equals(Material.SPLASH_POTION)) {
-            if(player.getItemInHand().getAmount() == 1) {
-                onUnsetInMainHandItem(player, player.getItemInHand());
-                onUnsetInInventory(player, player.getItemInHand());
+        if(player.getInventory().getItemInMainHand().getType().equals(Material.SPLASH_POTION)) {
+            if(player.getInventory().getItemInMainHand().getAmount() == 1) {
+                onUnsetInMainHandItem(player, player.getInventory().getItemInMainHand());
+                onUnsetInInventory(player, player.getInventory().getItemInMainHand());
             }
         }
 
         if(interactEvent.getAction() == Action.RIGHT_CLICK_BLOCK && !player.getInventory().getType().equals(InventoryType.CREATIVE))
-            if((player.getItemInHand().getType().isBlock() || Pattern.compile("("+ Material.ITEM_FRAME + "|" + Material.ARMOR_STAND + "|" + Material.REDSTONE + "|" + Material.PAINTING + "|" + "BOAT" + "|" + Material.STRING + "|" + "SPAWN_EGG" + "|" + Material.FIREWORK_ROCKET +")").matcher(player.getItemInHand().getType().toString()).find() || (player.getItemInHand().getType().toString().contains("MINECART") && (interactEvent.getClickedBlock() == null ? false : interactEvent.getClickedBlock().getType().toString().contains("RAIL"))) || ((player.getItemInHand().getType().equals(Material.WRITABLE_BOOK) || player.getItemInHand().getType().equals(Material.WRITTEN_BOOK) && (interactEvent.getClickedBlock() == null ? false : interactEvent.getClickedBlock().getType().equals(Material.LECTERN)))))){
-                if(player.getItemInHand().getAmount() == 1) {
-                    onUnsetInMainHandItem(player, player.getItemInHand());
-                    onUnsetInInventory(player, player.getItemInHand());
+            if((player.getInventory().getItemInMainHand().getType().isBlock() || Pattern.compile("("+ Material.ITEM_FRAME + "|" + Material.ARMOR_STAND + "|" + Material.REDSTONE + "|" + Material.PAINTING + "|" + "BOAT" + "|" + Material.STRING + "|" + "SPAWN_EGG" + "|" + Material.FIREWORK_ROCKET +")").matcher(player.getInventory().getItemInMainHand().getType().toString()).find() || (player.getInventory().getItemInMainHand().getType().toString().contains("MINECART") && (interactEvent.getClickedBlock() != null && interactEvent.getClickedBlock().getType().toString().contains("RAIL"))) || ((player.getInventory().getItemInMainHand().getType().equals(Material.WRITABLE_BOOK) || player.getInventory().getItemInMainHand().getType().equals(Material.WRITTEN_BOOK) && (interactEvent.getClickedBlock() != null && interactEvent.getClickedBlock().getType().equals(Material.LECTERN)))))){
+                if(player.getInventory().getItemInMainHand().getAmount() == 1) {
+                    onUnsetInMainHandItem(player, player.getInventory().getItemInMainHand());
+                    onUnsetInInventory(player, player.getInventory().getItemInMainHand());
                 }
             }
 
         if(interactEvent.getAction() == Action.RIGHT_CLICK_AIR || interactEvent.getAction() == Action.RIGHT_CLICK_BLOCK){
-            if(Pattern.compile("(HELMET|CHESTPLATE|LEGGINGS|BOOTS)").matcher(player.getItemInHand().getType().toString()).find()) {
-                onSetArmor(player, player.getItemInHand());
+            if(Pattern.compile("(HELMET|CHESTPLATE|LEGGINGS|BOOTS)").matcher(player.getInventory().getItemInMainHand().getType().toString()).find()) {
+                onSetArmor(player, player.getInventory().getItemInMainHand());
                 return;
             }
         }
 
         if(interactEvent.getAction() == Action.RIGHT_CLICK_AIR) {
-            ItemStack item = player.getItemInHand();
+            ItemStack item = player.getInventory().getItemInMainHand();
             Map<String, ConstructorNBTData> NBTList = main.NMSManager.getNBTKeys(item);
             for (Map.Entry<String, ConstructorNBTData> dataHash : NBTList.entrySet()) {
                 switch (dataHash.getKey()) {
                     case Main.LIGHTNING:
                         if (!getCooldown(NBTList, player, dataHash.getKey())) return;
                         player.getWorld().strikeLightning(player.getTargetBlock(null, 50).getLocation());
-                        player.setItemInHand(main.NMSManager.setData(Main.COOLDOWN, item, dataHash.getKey(), dataHash.getValue().dataInt + (int) (System.currentTimeMillis() / 1000)));
+                        player.getInventory().setItemInMainHand(main.NMSManager.setData(Main.COOLDOWN, item, dataHash.getKey(), dataHash.getValue().dataInt + (int) (System.currentTimeMillis() / 1000)));
                         break;
 
                     case Main.ARROW:
@@ -182,7 +167,7 @@ public class Handler implements Listener {
                     case Main.EGGS:
                         if (!getCooldown(NBTList, player, dataHash.getKey())) return;
                         player.launchProjectile(dataHash.getKey().equals(Main.ARROW) ? Arrow.class : (dataHash.getKey().equals(Main.SNOWBALL) ? Snowball.class : Egg.class));
-                        player.setItemInHand(main.NMSManager.setData(Main.COOLDOWN, item, dataHash.getKey(), dataHash.getValue().dataInt + (int) (System.currentTimeMillis() / 1000)));
+                        player.getInventory().setItemInMainHand(main.NMSManager.setData(Main.COOLDOWN, item, dataHash.getKey(), dataHash.getValue().dataInt + (int) (System.currentTimeMillis() / 1000)));
                         break;
                     case Main.TELEPORT:
                         if (!getCooldown(NBTList, player, dataHash.getKey())) return;
@@ -190,7 +175,7 @@ public class Handler implements Listener {
                         teleport.setYaw(player.getLocation().getYaw());
                         teleport.setPitch(player.getLocation().getPitch());
                         player.teleport(teleport);
-                        player.setItemInHand(main.NMSManager.setData(Main.COOLDOWN, item, dataHash.getKey(), dataHash.getValue().mapData.get("CD").dataInt + (int) (System.currentTimeMillis() / 1000)));
+                        player.getInventory().setItemInMainHand(main.NMSManager.setData(Main.COOLDOWN, item, dataHash.getKey(), dataHash.getValue().mapData.get("CD").dataInt + (int) (System.currentTimeMillis() / 1000)));
                         break;
                     case Main.FIREWORK:
                         if (!getCooldown(NBTList, player, dataHash.getKey())) return;
@@ -198,7 +183,7 @@ public class Handler implements Listener {
                         Firework firework = player.getWorld().spawn(player.getLocation(), Firework.class);
                         FireworkMeta fireworkMeta = firework.getFireworkMeta();
                         FireworkEffect.Builder builder = FireworkEffect.builder();
-                        if (dataHash.getValue().data != null) {
+                        if (dataHash.getValue().mapData.get("Meta").data != null) {
                             ArrayList<Color> temp = new ArrayList<>(Arrays.asList(COLORS));
                             for (int i = 0; i < random(temp.size()); i++) {
                                 int index = random(temp.size() - 1);
@@ -231,12 +216,12 @@ public class Handler implements Listener {
                             fireworkMeta.setPower(power > 3 ? 0 : (power == 0 ? 1 : power));
                         }
                         firework.setFireworkMeta(fireworkMeta);
-                        player.setItemInHand(main.NMSManager.setData(Main.COOLDOWN, item, dataHash.getKey(), dataHash.getValue().mapData.get("CD").dataInt + (int) (System.currentTimeMillis() / 1000)));
+                        player.getInventory().setItemInMainHand(main.NMSManager.setData(Main.COOLDOWN, item, dataHash.getKey(), dataHash.getValue().mapData.get("CD").dataInt + (int) (System.currentTimeMillis() / 1000)));
                         break;
                 }
             }
         }else if(interactEvent.getAction() == Action.RIGHT_CLICK_BLOCK){
-            ItemStack item = player.getItemInHand();
+            ItemStack item = player.getInventory().getItemInMainHand();
             Map<String, ConstructorNBTData> NBTList = main.NMSManager.getNBTKeys(item);
             for (Map.Entry<String, ConstructorNBTData> dataHash : NBTList.entrySet()) {
                 switch (dataHash.getKey()) {
@@ -245,7 +230,6 @@ public class Handler implements Listener {
                         interactEvent.setCancelled(true);
                         Location location = player.getTargetBlock(null, 6).getLocation();
                         location.setY(location.getBlockY() + 1);
-                        player.sendMessage(dataMap.get("Type").data);
                         LivingEntity entity = (LivingEntity) interactEvent.getPlayer().getWorld().spawn(location, allEntity.get(dataMap.get("Type").data));
                         if(dataMap.containsKey("MobType"))
                             switch (dataMap.get("Type").data){
@@ -355,10 +339,10 @@ public class Handler implements Listener {
 
     @EventHandler
     public void onClickEntity(PlayerInteractEntityEvent event){
-        if(event.getRightClicked().getType().equals(EntityType.ITEM_FRAME) || (Pattern.compile("("+ Material.NAME_TAG +"|"+ Material.LEAD +")").matcher(event.getPlayer().getItemInHand().getType().toString()).find()))
-            if(event.getPlayer().getItemInHand().getAmount() == 1) {
-                onUnsetInMainHandItem(event.getPlayer(), event.getPlayer().getItemInHand());
-                onUnsetInInventory(event.getPlayer(), event.getPlayer().getItemInHand());
+        if(event.getRightClicked().getType().equals(EntityType.ITEM_FRAME) || (Pattern.compile("("+ Material.NAME_TAG +"|"+ Material.LEAD +")").matcher(event.getPlayer().getInventory().getItemInMainHand().getType().toString()).find()))
+            if(event.getPlayer().getInventory().getItemInMainHand().getAmount() == 1) {
+                onUnsetInMainHandItem(event.getPlayer(), event.getPlayer().getInventory().getItemInMainHand());
+                onUnsetInInventory(event.getPlayer(), event.getPlayer().getInventory().getItemInMainHand());
             }
     }
 
@@ -402,7 +386,7 @@ public class Handler implements Listener {
 
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event){
-        if(event.getPlayer().getItemInHand().getType().equals(Material.AIR)) {
+        if(event.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.AIR)) {
             onUnsetInMainHandItem(event.getPlayer(), event.getItemDrop().getItemStack());
             onUnsetInInventory(event.getPlayer(), event.getItemDrop().getItemStack());
         }
@@ -412,7 +396,6 @@ public class Handler implements Listener {
     public void onPlayerBreakBlocks(BlockBreakEvent event){
         Player player = event.getPlayer();
         ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
-        event.getPlayer().sendMessage(String.valueOf(item.getType().getMaxDurability()));
         Map<String, ConstructorNBTData> NBTList = main.NMSManager.getNBTKeys(item);
         onBreakBlock(event.getBlock(), item, NBTList, player, player.getWorld(), false);
         if(event.getBlock().getType().equals(Material.AIR)) {
@@ -426,13 +409,11 @@ public class Handler implements Listener {
                     Location location = event.getBlock().getLocation();
                     ArrayList<Block> blocks = new ArrayList<>();
                     World world = player.getWorld();
-                    BlockFace g = event.getBlock().getFace(event.getBlock());
                     float pitch = player.getEyeLocation().getPitch();
                     if(pitch < -45f){
-                        firstX = location.getBlockX() - (int)(offsets[0] / 2);
+                        firstX = location.getBlockX() - (offsets[0] / 2);
                         firstY = location.getBlockY();
-                        firstZ = location.getBlockZ() - (int)(offsets[2] / 2);
-                        event.getPlayer().sendMessage(firstX + " " + firstY + " " + firstZ);
+                        firstZ = location.getBlockZ() - (offsets[2] / 2);
                         for(int iX = 0; iX < offsets[0]; iX++){
                             for(int iY = 0; iY < offsets[1]; iY++){
                                 for(int iZ = 0; iZ < offsets[2]; iZ++){
@@ -441,10 +422,9 @@ public class Handler implements Listener {
                             }
                         }
                     }else if(pitch > 45f){
-                        firstX = location.getBlockX() - (int)(offsets[0] / 2);
+                        firstX = location.getBlockX() - (offsets[0] / 2);
                         firstY = location.getBlockY();
-                        firstZ = location.getBlockZ() - (int)(offsets[2] / 2);
-                        event.getPlayer().sendMessage(firstX + " " + firstY + " " + firstZ);
+                        firstZ = location.getBlockZ() - (offsets[2] / 2);
                         for(int iX = 0; iX < offsets[0]; iX++){
                             for(int iY = 0; iY < offsets[1]; iY++){
                                 for(int iZ = 0; iZ < offsets[2]; iZ++){
@@ -455,10 +435,9 @@ public class Handler implements Listener {
                     }else
                     switch (player.getFacing().toString()){
                         case "NORTH":
-                            firstX = location.getBlockX() - (int)(offsets[0] / 2);
-                            firstY = location.getBlockY() - (int)(offsets[1] / 2);
+                            firstX = location.getBlockX() - (offsets[0] / 2);
+                            firstY = location.getBlockY() - (offsets[1] / 2);
                             firstZ = location.getBlockZ();
-                            event.getPlayer().sendMessage(firstX + " " + firstY + " " + firstZ);
                             for(int iX = 0; iX < offsets[0]; iX++){
                                 for(int iY = 0; iY < offsets[1]; iY++){
                                     for(int iZ = 0; iZ < offsets[2]; iZ++){
@@ -468,10 +447,9 @@ public class Handler implements Listener {
                             }
                             break;
                         case "SOUTH":
-                            firstX = location.getBlockX() - (int)(offsets[0] / 2);
-                            firstY = location.getBlockY() - (int)(offsets[1] / 2);
+                            firstX = location.getBlockX() - (offsets[0] / 2);
+                            firstY = location.getBlockY() - (offsets[1] / 2);
                             firstZ = location.getBlockZ();
-                            event.getPlayer().sendMessage(firstX + " " + firstY + " " + firstZ);
                             for(int iX = 0; iX < offsets[0]; iX++){
                                 for(int iY = 0; iY < offsets[1]; iY++){
                                     for(int iZ = 0; iZ < offsets[2]; iZ++){
@@ -482,9 +460,8 @@ public class Handler implements Listener {
                             break;
                         case "WEST":
                             firstX = location.getBlockX();
-                            firstY = location.getBlockY() - (int)(offsets[1] / 2);
-                            firstZ = location.getBlockZ() + (int)(offsets[2] / 2);
-                            event.getPlayer().sendMessage(firstX + " " + firstY + " " + firstZ);
+                            firstY = location.getBlockY() - (offsets[1] / 2);
+                            firstZ = location.getBlockZ() + (offsets[2] / 2);
                             for(int iX = 0; iX < offsets[0]; iX++){
                                 for(int iY = 0; iY < offsets[1]; iY++){
                                     for(int iZ = 0; iZ < offsets[2]; iZ++){
@@ -495,9 +472,8 @@ public class Handler implements Listener {
                             break;
                         case "EAST":
                             firstX = location.getBlockX();
-                            firstY = location.getBlockY() - (int)(offsets[1] / 2);
-                            firstZ = location.getBlockZ() + (int)(offsets[2] / 2);
-                            event.getPlayer().sendMessage(firstX + " " + firstY + " " + firstZ);
+                            firstY = location.getBlockY() - (offsets[1] / 2);
+                            firstZ = location.getBlockZ() + (offsets[2] / 2);
                             for(int iX = 0; iX < offsets[0]; iX++){
                                 for(int iY = 0; iY < offsets[1]; iY++){
                                     for(int iZ = 0; iZ < offsets[2]; iZ++){
@@ -507,7 +483,7 @@ public class Handler implements Listener {
                             }
                             break;
                     }
-                    boolean isBreak = (dataHash.getValue().mapData.get("BreakItem").dataInt == 1 ? false : true);
+                    boolean isBreak = (dataHash.getValue().mapData.get("BreakItem").dataInt != 1);
                     int countBreak = 0;
                     int exp = 0;
                     for (Block block: blocks) {
@@ -532,7 +508,6 @@ public class Handler implements Listener {
                     if(!isBreak)
                         item.setDurability((short) (item.getDurability() +  (countBreak / (item.getEnchantmentLevel(Enchantment.DURABILITY) + 1))));
 
-                    event.getPlayer().sendMessage(String.valueOf(item.getDurability()));
                     break;
             }
         }
@@ -543,18 +518,11 @@ public class Handler implements Listener {
         int newDrop = drop;
         int chance = value * 15;
         if(chance >= 100)
-            newDrop = getFortune(value - 7, drop + 1);
+            newDrop = getFortune(value - 7, drop * 2);
         else
-        if(chance >= random(100))
-            newDrop *= 2;
+            if(chance >= random(100))
+                newDrop *= 2;
         return newDrop;
-    }
-
-    @EventHandler
-    public void oasdad(PlayerToggleSneakEvent event){
-//        main.NMSManager.createParticles(event.getPlayer());
-//        event.getPlayer().sendMessage(String.valueOf(event.getPlayer().getLocation()));
-//        event.getPlayer().getWorld().playEffect(event.getPlayer().getLocation(), Effect.ENDER_SIGNAL, 0);
     }
 
     @EventHandler
@@ -562,7 +530,7 @@ public class Handler implements Listener {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
             ItemStack itemStack = event.getItem().getItemStack();
-             if(player.getItemInHand().getType().equals(Material.AIR))
+             if(player.getInventory().getItemInMainHand().getType().equals(Material.AIR))
                 Bukkit.getScheduler().runTask(main, () -> {
                     if(player.getInventory().first(itemStack) == player.getInventory().getHeldItemSlot())
                         onSetInMainHandItem(player, itemStack);
@@ -575,7 +543,7 @@ public class Handler implements Listener {
     @EventHandler
     public void onPlayerChangeItemInMainHand(PlayerItemHeldEvent event){
         Player player = event.getPlayer();
-        ItemStack item = player.getItemInHand();
+        ItemStack item = player.getInventory().getItemInMainHand();
         if(!item.getType().equals(Material.AIR))
             onUnsetInMainHandItem(player, item);
 
@@ -600,7 +568,6 @@ public class Handler implements Listener {
         ArrayList<ItemStack> arrayList = new ArrayList<>(Arrays.asList(inventory.getArmorContents()));
         arrayList.add(inventory.getItemInMainHand());
         arrayList.add(inventory.getItemInOffHand());
-        event.getPlayer().sendMessage("exp: " + String.valueOf(event.getAmount()));
         int lvl = 0, count = 0;
         for (ItemStack item : arrayList) {
             if(item == null)
@@ -614,8 +581,7 @@ public class Handler implements Listener {
             count++;
         }
         if(count != 0) {
-            event.getPlayer().sendMessage("Fortune test" + getFortune((int) (lvl / count), event.getAmount()));
-            event.getPlayer().giveExp(getFortune((int) (lvl / count), event.getAmount()) - event.getAmount());
+            event.getPlayer().giveExp(getFortune(lvl / count, event.getAmount()) - event.getAmount());
         }
     }
     @EventHandler
@@ -633,7 +599,7 @@ public class Handler implements Listener {
                         onUnsetInSecondHandItem(player, event.getCurrentItem());
                     else
                         onSetInSecondHandItem(player, event.getCursor());
-                }else if(Pattern.compile("("+ InventoryAction.MOVE_TO_OTHER_INVENTORY +"|"+ InventoryAction.HOTBAR_SWAP +")").matcher(event.getAction().toString()).find() && player.getItemInHand().getType().equals(Material.AIR)){
+                }else if(Pattern.compile("("+ InventoryAction.MOVE_TO_OTHER_INVENTORY +"|"+ InventoryAction.HOTBAR_SWAP +")").matcher(event.getAction().toString()).find() && player.getInventory().getItemInMainHand().getType().equals(Material.AIR)){
                     ItemStack newItemStack = event.getCurrentItem().clone();
                     Bukkit.getScheduler().runTask(main, () -> {
                         if(player.getInventory().first(newItemStack) == player.getInventory().getHeldItemSlot())
@@ -659,7 +625,7 @@ public class Handler implements Listener {
                         if (event.getRawSlot() < (player.getOpenInventory().countSlots() - player.getInventory().getSize()) && event.getAction().equals(InventoryAction.MOVE_TO_OTHER_INVENTORY)) {
                             onSetInInventory(player, event.getCurrentItem());
                             ItemStack tempItem = event.getCurrentItem().clone();
-                            if(player.getItemInHand().getType().equals(Material.AIR))
+                            if(player.getInventory().getItemInMainHand().getType().equals(Material.AIR))
                                 Bukkit.getScheduler().runTask(main, () -> {
                                     if(player.getInventory().first(tempItem) == player.getInventory().getHeldItemSlot())
                                         onSetInMainHandItem(player, tempItem);
@@ -739,14 +705,16 @@ public class Handler implements Listener {
                 items = player.getInventory().addItem( isSiltTouch ? new ItemStack(Material.NETHER_GOLD_ORE, 1) : new ItemStack(Material.GOLD_NUGGET, isFortune ? getFortune(fortune, 1) : 1));
             }else if(block.getType().equals(Material.GRAVEL)) {
                 items = player.getInventory().addItem( isSiltTouch ? new ItemStack(Material.GRAVEL, 1) : isFortune ? (getFortune(fortune, 1) == 1 ? new ItemStack(Material.GRAVEL, 1) : new ItemStack(Material.FLINT, 1)) : new ItemStack(Material.GRAVEL, 1));
+            }else if(block.getType().equals(Material.STONE)) {
+                items = player.getInventory().addItem( isSiltTouch || isAutoMelting ? new ItemStack(Material.STONE, 1) : new ItemStack(Material.COBBLESTONE, 1));
+            }else if(block.getType().equals(Material.ENDER_CHEST)) {
+                items = player.getInventory().addItem( isSiltTouch ? new ItemStack(Material.ENDER_CHEST, 1) : new ItemStack(Material.OBSIDIAN, 8));
             }else {
                 if (isAutoMelting) {
                     if (block.getType().equals(Material.IRON_ORE)) {
                         items = player.getInventory().addItem(isSiltTouch ? new ItemStack(Material.IRON_ORE, 1) : new ItemStack(Material.IRON_INGOT, isFortune ? getFortune(fortune, 1) : 1));
                     } else if (block.getType().equals(Material.GOLD_ORE)) {
                         items = player.getInventory().addItem(isSiltTouch ? new ItemStack(Material.GOLD_ORE, 1) : new ItemStack(Material.GOLD_INGOT, isFortune ? getFortune(fortune, 1) : 1));
-                    } else if (block.getType().equals(Material.STONE)) {
-                        items = player.getInventory().addItem(new ItemStack(Material.STONE, 1));
                     } else if (block.getType().equals(Material.NETHERRACK)) {
                         items = player.getInventory().addItem(new ItemStack(Material.NETHER_BRICK, 1));
                     }
@@ -766,48 +734,64 @@ public class Handler implements Listener {
                     block.setType(Material.AIR);
                 }else if(block.getType().equals(Material.COAL_ORE)){
                     world.dropItem(block.getLocation(), new ItemStack(Material.COAL, getFortune(fortune, 1)));
-                    block.setType(Material.AIR);;
+                    block.setType(Material.AIR);
                 }else if(block.getType().equals(Material.LAPIS_ORE)){
                     world.dropItem(block.getLocation(), new ItemStack(Material.LAPIS_LAZULI, getFortune(fortune, 7)));
-                    block.setType(Material.AIR);;
+                    block.setType(Material.AIR);
                 }else if(block.getType().equals(Material.EMERALD_ORE)){
                     world.dropItem(block.getLocation(), new ItemStack(Material.EMERALD, getFortune(fortune, 1)));
-                    block.setType(Material.AIR);;
+                    block.setType(Material.AIR);
                 }else if(block.getType().equals(Material.REDSTONE_ORE)){
                     world.dropItem(block.getLocation(), new ItemStack(Material.REDSTONE, getFortune(fortune, 5)));
-                    block.setType(Material.AIR);;
+                    block.setType(Material.AIR);
                 }else if(block.getType().equals(Material.NETHER_QUARTZ_ORE)){
                     world.dropItem(block.getLocation(), new ItemStack(Material.QUARTZ, getFortune(fortune, 1)));
-                    block.setType(Material.AIR);;
+                    block.setType(Material.AIR);
                 }else if(block.getType().equals(Material.NETHER_GOLD_ORE)) {
                     world.dropItem(block.getLocation(), new ItemStack(Material.GOLD_NUGGET, getFortune(fortune, 1)));
-                    block.setType(Material.AIR);;
+                    block.setType(Material.AIR);
                 }else if(block.getType().equals(Material.GRAVEL)) {
                     world.dropItem(block.getLocation(), getFortune(fortune, 1) == 1 ? new ItemStack(Material.GRAVEL, 1) : new ItemStack(Material.FLINT, 1));
-                    block.setType(Material.AIR);;
+                    block.setType(Material.AIR);
                 }
             }else if(itemBreaked.getEnchantmentLevel(Enchantment.SILK_TOUCH) != 0){
                 if(block.getType().equals(Material.DIAMOND_ORE)) {
                     world.dropItem(block.getLocation(), new ItemStack(Material.DIAMOND_ORE, 1));
-                    block.setType(Material.AIR);;
+                    block.setType(Material.AIR);
                 }else if(block.getType().equals(Material.COAL_ORE)){
                     world.dropItem(block.getLocation(), new ItemStack(Material.COAL_ORE, 1));
-                    block.setType(Material.AIR);;
+                    block.setType(Material.AIR);
                 }else if(block.getType().equals(Material.LAPIS_ORE)){
                     world.dropItem(block.getLocation(), new ItemStack(Material.LAPIS_ORE, 1));
-                    block.setType(Material.AIR);;
+                    block.setType(Material.AIR);
                 }else if(block.getType().equals(Material.EMERALD_ORE)){
                     world.dropItem(block.getLocation(), new ItemStack(Material.EMERALD_ORE, 1));
-                    block.setType(Material.AIR);;
+                    block.setType(Material.AIR);
                 }else if(block.getType().equals(Material.REDSTONE_ORE)){
                     world.dropItem(block.getLocation(), new ItemStack(Material.REDSTONE_ORE, 1));
-                    block.setType(Material.AIR);;
+                    block.setType(Material.AIR);
                 }else if(block.getType().equals(Material.NETHER_QUARTZ_ORE)){
                     world.dropItem(block.getLocation(), new ItemStack(Material.NETHER_QUARTZ_ORE, 1));
-                    block.setType(Material.AIR);;
+                    block.setType(Material.AIR);
                 }else if(block.getType().equals(Material.NETHER_GOLD_ORE)) {
                     world.dropItem(block.getLocation(), new ItemStack(Material.NETHER_GOLD_ORE, 1));
-                    block.setType(Material.AIR);;
+                    block.setType(Material.AIR);
+                }
+            }
+
+            if (isAutoMelting) {
+                if (block.getType().equals(Material.IRON_ORE)) {
+                    world.dropItem(block.getLocation(), isSiltTouch ? new ItemStack(Material.IRON_ORE, 1) : new ItemStack(Material.IRON_INGOT, isFortune ? getFortune(fortune, 1) : 1));
+                    block.setType(Material.AIR);
+                } else if (block.getType().equals(Material.GOLD_ORE)) {
+                    world.dropItem(block.getLocation(), isSiltTouch ? new ItemStack(Material.GOLD_ORE, 1) : new ItemStack(Material.GOLD_INGOT, isFortune ? getFortune(fortune, 1) : 1));
+                    block.setType(Material.AIR);
+                } else if (block.getType().equals(Material.NETHERRACK)) {
+                    world.dropItem(block.getLocation(), new ItemStack(Material.NETHER_BRICK, 1));
+                    block.setType(Material.AIR);
+                }else if(block.getType().equals(Material.STONE)) {
+                    world.dropItem(block.getLocation(), new ItemStack(Material.STONE, 1));
+                    block.setType(Material.AIR);
                 }
             }
             //diamond 3 - 7
@@ -828,7 +812,7 @@ public class Handler implements Listener {
     }
 
     public void onSetInMainHandItem(Player player, ItemStack itemStack){
-        player.sendMessage("Взят предмет: " + itemStack.getType());
+//        player.sendMessage("Взят предмет: " + itemStack.getType());
         Map<String, ConstructorNBTData> NBTList = main.NMSManager.getNBTKeys(itemStack);
         for (Map.Entry<String, ConstructorNBTData> dataHash: NBTList.entrySet()) {
             switch (dataHash.getKey()) {
@@ -837,14 +821,14 @@ public class Handler implements Listener {
                     break;
 
                 case Main.PARTICLES_IN_MAIN_HAND:
-//                    player.getInventory().setItem(player.getInventory().first(itemStack), (main.NMSManager.setData(Main.ID_THREAD, itemStack, Main.PARTICLES_IN_MAIN_HAND, main.NMSManager.createParticles(player, dataHash.getValue().mapData, main))));
+                    player.getInventory().setItem(player.getInventory().first(itemStack), (main.NMSManager.setData(Main.ID_THREAD, itemStack, Main.PARTICLES_IN_MAIN_HAND, main.NMSManager.createParticles(player, dataHash.getValue().mapData, main))));
                     break;
             }
         }
     }
 
     public void onUnsetInMainHandItem(Player player, ItemStack itemStack){
-        player.sendMessage("Убран предмет: " + itemStack.getType());
+//        player.sendMessage("Убран предмет: " + itemStack.getType());
         Map<String, ConstructorNBTData> NBTList = main.NMSManager.getNBTKeys(itemStack);
         for (Map.Entry<String, ConstructorNBTData> dataHash: NBTList.entrySet()) {
             switch (dataHash.getKey()) {
@@ -861,7 +845,7 @@ public class Handler implements Listener {
     }
 
     public void onSetInSecondHandItem(Player player, ItemStack itemStack){
-        player.sendMessage("Взят во вторую руку: " + itemStack.getType().toString());
+//        player.sendMessage("Взят во вторую руку: " + itemStack.getType().toString());
         Map<String, ConstructorNBTData> NBTList = main.NMSManager.getNBTKeys(itemStack);
         for (Map.Entry<String, ConstructorNBTData> dataHash: NBTList.entrySet()) {
             switch (dataHash.getKey()) {
@@ -873,7 +857,7 @@ public class Handler implements Listener {
     }
 
     public void onUnsetInSecondHandItem(Player player, ItemStack itemStack){
-        player.sendMessage("Убран из второй руки: " + itemStack.getType().toString());
+//        player.sendMessage("Убран из второй руки: " + itemStack.getType().toString());
         Map<String, ConstructorNBTData> NBTList = main.NMSManager.getNBTKeys(itemStack);
         for (Map.Entry<String, ConstructorNBTData> dataHash: NBTList.entrySet()) {
             switch (dataHash.getKey()) {
@@ -890,7 +874,7 @@ public class Handler implements Listener {
     }
 
     public void onSetInInventory(Player player, ItemStack itemStack){
-        player.sendMessage("Положил предмет в инветарь: " + itemStack.getType());
+//        player.sendMessage("Положил предмет в инветарь: " + itemStack.getType());
         Map<String, ConstructorNBTData> NBTList = main.NMSManager.getNBTKeys(itemStack);
         for (Map.Entry<String, ConstructorNBTData> dataHash: NBTList.entrySet()) {
             switch (dataHash.getKey()) {
@@ -910,8 +894,9 @@ public class Handler implements Listener {
             }
         }
     }
+
     public void onUnsetInInventory(Player player, ItemStack itemStack){
-        player.sendMessage("Убрал предмет из инветаря: " + itemStack.getType());
+//        player.sendMessage("Убрал предмет из инветаря: " + itemStack.getType());
         Map<String, ConstructorNBTData> NBTList = main.NMSManager.getNBTKeys(itemStack);
         for (Map.Entry<String, ConstructorNBTData> dataHash: NBTList.entrySet()) {
             switch (dataHash.getKey()) {
@@ -928,7 +913,7 @@ public class Handler implements Listener {
     }
 
     public void onSetArmor(Player player, ItemStack itemStack){
-        player.sendMessage("Надето: " + itemStack.getType().toString());
+//        player.sendMessage("Надето: " + itemStack.getType().toString());
         Map<String, ConstructorNBTData> NBTList = main.NMSManager.getNBTKeys(itemStack);
         for (Map.Entry<String, ConstructorNBTData> dataHash: NBTList.entrySet()) {
             switch (dataHash.getKey()){
@@ -1006,16 +991,12 @@ public class Handler implements Listener {
         }
     }
 
-    public ArrayList<String> getAnimColor(ArrayList<String> colorsHex, int stage){
-        ArrayList<String>  colorReturn = (ArrayList<String>) colorsHex.clone();
+    public static ArrayList<String> getAnimColor(ArrayList<String> colorsHex, int stage){
+        ArrayList<String>  colorReturn = new ArrayList<>();
         for (int i = 0; i < colorsHex.size(); i++){
             ArrayList<String> colors = getColor(colorsHex.get(i), colorsHex.get(i == colorsHex.size() -1 ? 0 : i + 1), stage);
-            for (int l = 0; l < colors.size(); l++){
-                if(i == colorsHex.size() - 1)
-                    colorReturn.add(colors.get(l));
-                else
-                    colorReturn.add(i + 1 + l, colors.get(l));
-            }
+            colorReturn.add(colorsHex.get(i));
+            colorReturn.addAll(colors);
         }
         return colorReturn;
     }
@@ -1025,7 +1006,7 @@ public class Handler implements Listener {
         newColors.add(colorOne);
         newColors.add(getColorValue(colorOne, colorTwo));
         newColors.add(colorTwo);
-        stage = (int)(stage/2);
+        stage = stage/2;
         if(stage > 0)
             for (int i = 0; i < 2; i++){
                 ArrayList<String> getColors = getColor(newColors.get(i), newColors.get(i + 1), stage);
@@ -1043,15 +1024,13 @@ public class Handler implements Listener {
         char[] one = colour1.toCharArray();
         char[] two = colour2.toCharArray();
         for(int i = 0; i < one.length; i++){
-            long color1 = Long.parseLong(String.valueOf(one[i]), 16);
-            long color2 = Long.parseLong(String.valueOf(two[i]), 16);
-            result.append(Long.toHexString((color1 + color2)/2));
+            result.append(Long.toHexString((Long.parseLong(String.valueOf(one[i]), 16) + Long.parseLong(String.valueOf(two[i]), 16))/2));
         }
         return result.toString();
     }
 
     public void onUnsetArmor(Player player, ItemStack itemStack){
-        player.sendMessage("Снято: " + itemStack.getType().toString());
+//        player.sendMessage("Снято: " + itemStack.getType().toString());
         Map<String, ConstructorNBTData> NBTList = main.NMSManager.getNBTKeys(itemStack);
 
         for (Map.Entry<String, ConstructorNBTData> dataHash: NBTList.entrySet()) {
@@ -1076,7 +1055,7 @@ public class Handler implements Listener {
     public boolean getCooldown(Map<String, ConstructorNBTData> NBTList, Player player, String event){
         if(NBTList.get(Main.COOLDOWN) == null) return true;
         int cdValue = 0;
-        Map<String, ConstructorNBTData> CDS = (Map<String, ConstructorNBTData>) NBTList.get(Main.COOLDOWN).arrayData;
+        Map<String, ConstructorNBTData> CDS = NBTList.get(Main.COOLDOWN).mapData;
         if(!CDS.containsKey(event))
             return true;
         cdValue = CDS.get(event).dataInt;
